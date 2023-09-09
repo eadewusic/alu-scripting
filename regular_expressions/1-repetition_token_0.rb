@@ -10,7 +10,7 @@ end
 input_string = ARGV[0]
 
 # Use the regular expression pattern with a corrected quantifier
-matches = input_string.scan(/hbtn[tn]*/)
+matches = input_string.scan(/hb[t]*n/)
 
 # Join and print the matched text
 puts matches.join
