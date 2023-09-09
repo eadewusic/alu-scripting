@@ -9,8 +9,8 @@ end
 # Get the input string from the command line argument
 input_string = ARGV[0]
 
-# Use the regular expression pattern with a corrected quantifier
-matches = input_string.scan(/hb[t]*n\z/)
+# Use the regular expression pattern to find matches
+matches = input_string.scan(/hbt{2,5}n/)
 
 # Join and print the matched text
 puts matches.join
