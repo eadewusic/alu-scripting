@@ -9,8 +9,8 @@ end
 # Get the input string from the command line argument
 input_string = ARGV[0]
 
-# Define the regular expression pattern
-pattern = /hbtn+n/
+# Define the regular expression pattern with *
+pattern = /hbtn*n/
 
 # Use the regular expression to find matches in the input string
 matches = input_string.scan(pattern)
