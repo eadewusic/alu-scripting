@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """
 0-subs
+
+Module to interact with the Reddit API and retrieve the
+number of subscribers for a given subreddit.
 """
 
 import requests
@@ -8,7 +11,12 @@ import requests
 def number_of_subscribers(subreddit):
     """
     Returns the number of subscribers for a given subreddit.
-    If the subreddit is invalid, returns 0.
+    
+    Args:
+        subreddit (str): The name of the subreddit.
+        
+    Returns:
+        int: The number of subscribers. Returns 0 for an invalid subreddit.
     """
     # Set a custom User-Agent to avoid Too Many Requests error
     headers = {'User-Agent': 'my_user_agent'}
@@ -41,4 +49,3 @@ def number_of_subscribers(subreddit):
 if __name__ == '__main__':
     subreddit = input("Enter a subreddit: ")
     print(number_of_subscribers(subreddit))
-
