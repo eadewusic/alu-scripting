@@ -1,29 +1,54 @@
 #!/usr/bin/python3
-
 """
-0-subs
+Reddit Subreddit Subscribers Query Module
 
-Module to interact with the Reddit API and retrieve the
-number of subscribers for a given subreddit.
+This module contains a function that interacts with the Reddit API
+to fetch the total number of subscribers for a specified subreddit.
+If the subreddit is valid, the function returns the subscriber count.
+For an invalid subreddit or any errors during the API request, the
+function gracefully returns 0.
+
+Utilizing the Reddit API usually doesn't necessitate authentication
+for most operations. To prevent potential "Too Many Requests" issues,
+a distinctive User-Agent header is embedded in the request.
+
+Usage:
+    1. Ensure the 'requests' module is installed.
+    2. Invoke the 'number_of_subscribers(subreddit)' function with
+       the desired subreddit name to obtain the subscriber count.
+
+Parameters:
+    subreddit (str): The name of the subreddit for which to obtain
+    the subscriber count.
+
+Returns:
+    int: The number of subscribers for the specified subreddit.
+    Returns 0 for invalid subreddits or in the case of errors.
+
+Example:
+    subscribers_count = number_of_subscribers("programming")
+    print(f"The subreddit 'programming' boasts {subscribers_count} subscribers.")
 """
 
 import requests
 
 def number_of_subscribers(subreddit):
     """
-    Returns the number of subscribers for a given subreddit.
-    
+    Queries the Reddit API to retrieve the total number of subscribers
+    (not including active users) for a given subreddit.
+
     Args:
         subreddit (str): The name of the subreddit.
-        
-    Returns:
-        int: The number of subscribers. Returns 0 for an invalid subreddit.
-    """
-    # Set a custom User-Agent to avoid Too Many Requests error
-    headers = {'User-Agent': 'my_user_agent'}
 
+    Returns:
+        int: The number of subscribers for the specified subreddit.
+        Returns 0 for invalid subreddits or in case of errors.
+    """
     # Reddit API endpoint for subreddit information
     url = f'https://www.reddit.com/r/{subreddit}/about.json'
+
+    # Set a unique User-Agent to mitigate potential issues
+    headers = {'User-Agent': 'SubredditQueryAgent/1.0'}
 
     try:
         # Make the API request
@@ -48,5 +73,5 @@ def number_of_subscribers(subreddit):
 
 # Test the function
 if __name__ == '__main__':
-    subreddit = input("Enter a subreddit: ")
-    print(number_of_subscribers(subreddit))
+    subreddit_name = input("Enter a subreddit: ")
+    print(number_of_subscribers(subreddit_name))
