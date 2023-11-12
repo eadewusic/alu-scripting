@@ -4,6 +4,7 @@ parses the title of all hot articles, and prints a
 sorted count of given keywords
 '''
 import requests
+import copy
 
 def count_words(subreddit, word_list, fullname="", count=0, hash_table=None):
     '''Fetches all hot posts in a subreddit and counts occurrences of keywords.
@@ -70,7 +71,7 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table=None):
     # If there are more pages, recurse with updated parameters
     if after:
         # Pass a new hash_table to avoid sharing counts between recursive calls
-        count_words(subreddit, word_list, after, count, hash_table.copy())
+        count_words(subreddit, word_list, after, count, copy.deepcopy(hash_table))
     else:
         # If no more pages, print the results after reaching the end
         {print('{}: {}'.format(key, value)) for key, value in sorted(hash_table.items(), key=lambda i: (-i[1], i[0]))}
