@@ -26,14 +26,16 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     results = info_json.get('data').get('children')
     new_packet = [post.get('data').get('title') for post in results]
     for title in new_packet:
-        for word in word_list:
-            word = word.lower()
-            formatted_title = title.lower().split(" ")
-            if word in formatted_title:
-                if word in hash_table.keys():
-                    hash_table[word] += 1
-                else:
-                    hash_table[word] = 1
+    counted_keywords = set()
+    for word in word_list:
+        word = word.lower()
+        formatted_title = title.lower().split(" ")
+        if word in formatted_title and word not in counted_keywords:
+            if word in hash_table.keys():
+                hash_table[word] += 1
+            else:
+                hash_table[word] = 1
+            counted_keywords.add(word)
     after = info_json.get('data').get('after', None)
     dist = info_json.get('data').get('dist')
     count += dist
