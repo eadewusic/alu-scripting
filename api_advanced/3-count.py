@@ -6,6 +6,7 @@ sorted count of given keywords
 import copy
 import requests
 
+
 def count_words(subreddit, word_list, instances=None, after="", count=0):
     '''Fetches all hot posts in a subreddit and counts occurrences of keywords.
 
