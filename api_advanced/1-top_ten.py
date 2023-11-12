@@ -1,68 +1,51 @@
 #!/usr/bin/python3
-"""
-Defines a recursive function that queries the Reddit API
-and returns a list containing the titles of all hot articles
+'''
+Queries the Reddit API and prints the titles of the first 10 hot posts
 for a given subreddit.
-"""
+'''
 
 import requests
 
-def recurse(subreddit, hot_list=[]):
-    """
-    Recursively queries the Reddit API and returns a list
-    containing the titles of all hot articles for a given subreddit.
+def top_ten(subreddit):
+    '''
+    Prints the titles of the first 10 hot posts for a given subreddit.
 
     Args:
         subreddit (str): The name of the subreddit.
-        hot_list (list): A list to store the titles of hot articles (default=[]).
+    '''
+    # Check if the subreddit is None or not a string
+    if subreddit is None or not isinstance(subreddit, str):
+        print(None)
+        return
 
-    Returns:
-        list: A list containing the titles of all hot articles.
-              Returns None if no results are found or if the subreddit is invalid.
-    """
-    if not subreddit or not isinstance(subreddit, str):
-        return None
+    # Base URL for the Reddit API
+    endpoint = 'https://www.reddit.com'
 
-    # Reddit API endpoint for hot articles in the specified subreddit
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json'
+    # Custom User-Agent to avoid potential issues
+    headers = {'user-agent': 'Mozilla/5.0 \
+(Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
-    # Set a custom User-Agent to avoid Too Many Requests error
-    headers = {'User-Agent': 'my_user_agent'}
+    # Make a GET request to the subreddit's hot.json endpoint
+    # allow_redirects=False to prevent automatic redirection
+    response = requests.get('{}/r/{}/hot.json?limit=10'.format(
+            endpoint,
+            subreddit), headers=headers, allow_redirects=False)
 
-    try:
-        # Make the API request
-        response = requests.get(url, headers=headers)
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the JSON response
         data = response.json()
 
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            # Extract titles from the current page and append to hot_list
-            titles = [post['data']['title'] for post in data['data']['children']]
-            hot_list.extend(titles)
-
-            # Check if there are more pages (pagination)
-            after = data['data'].get('after')
-            if after:
-                # Recursively call the function for the next page
-                recurse(subreddit, hot_list, after)
-
-            return hot_list
-        elif response.status_code == 404:
-            # Invalid subreddit returns status code 404
-            return None
-        else:
-            # Handle other response codes if needed
-            print(f"Error: {response.status_code}")
-            return None
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
-
-# Test the function
-if __name__ == '__main__':
-    subreddit = input("Enter a subreddit: ")
-    result = recurse(subreddit)
-    if result is not None:
-        print(len(result))
+        # Extract and print the titles of the first 10 hot posts
+        for post in data.get('data', {}).get('children', []):
+            print(post.get('data', {}).get('title'))
     else:
-        print("None")
+        # Print None for invalid subreddit or if there's an
+        # issue with the request
+        print(None)
+
+# Example usage or testing code
+if __name__ == '__main__':
+    # Test the function with a subreddit (e.g., 'programming')
+    subreddit_name = input("Enter a subreddit: ")
+    top_ten(subreddit_name)
