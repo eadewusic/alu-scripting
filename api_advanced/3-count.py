@@ -3,8 +3,9 @@
 parses the title of all hot articles, and prints a
 sorted count of given keywords
 '''
-import requests
 import copy
+import requests
+
 
 def count_words(subreddit, word_list, instances=None, after="", count=0):
     '''Fetches all hot posts in a subreddit and counts occurrences of keywords.
@@ -76,7 +77,7 @@ def count_words(subreddit, word_list, instances=None, after="", count=0):
         # If no more pages, print the results after reaching the end
         if len(instances) == 0:
             return
-        instances = sorted(instances.items(), key=lambda kv: (-kv[1], kv[0]))
+        instances = sorted(instances.items(), key=lambda kv: (-kv[1], kv[0].lower()))  # Adjust sorting for case-insensitivity
         {print('{}: {}'.format(key, value)) for key, value in instances}
 
 # Example usage or testing code
