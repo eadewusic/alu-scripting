@@ -37,10 +37,10 @@ def recurse(subreddit, hot_list=None, after=None):
 
     # Make a GET request to the subreddit's hot.json endpoint
     response = requests.get(
-    '{}/r/{}/hot.json'.format(endpoint, subreddit),
-    headers=headers,
-    params=params,
-    allow_redirects=False
+        '{}/r/{}/hot.json'.format(endpoint, subreddit),
+        headers=headers,
+        params=params,
+        allow_redirects=False
     )
 
     # Check if the request was successful (status code 200)
