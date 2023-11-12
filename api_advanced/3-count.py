@@ -28,8 +28,7 @@ def count_words(subreddit, word_list, counts=None, after=None):
     endpoint = 'https://www.reddit.com'
 
     # Custom User-Agent to avoid potential issues
-    headers = {'user-agent': 'Mozilla/5.0 \
-(Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
     # Parameters for the API request
     params = {'limit': 100, 'after': after}
