@@ -3,8 +3,7 @@
  parses the title of all hot articles, and prints a
  sorted count of given keywords
 '''
-import requests
-import re # import the regular expression module
+import requests # import the regular expression module
 
 
 def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
