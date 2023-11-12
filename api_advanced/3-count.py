@@ -1,64 +1,75 @@
 #!/usr/bin/python3
-'''a recursive function that queries the Reddit API,
- parses the title of all hot articles, and prints a
- sorted count of given keywords
+'''
+Recursively queries the Reddit API, parses the title of all hot articles,
+and prints a sorted count of given keywords.
 '''
 
 import requests
 
-def count_words(subreddit, word_list, counts=None, after=None):
-    '''fetches all hot posts in a subreddit
-    Return:
-        None - if subreddit is invalid
+def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
+    '''
+    Recursively queries the Reddit API, parses the title of all hot articles,
+    and prints a sorted count of given keywords.
+
+    Args:
+        subreddit (str): The name of the subreddit.
+        word_list (list): A list of keywords to count.
+        fullname (str): The identifier for the last post in the previous page.
+        count (int): The total count of posts processed so far.
+        hash_table (dict): A dictionary to store the counts (default is {}).
+
+    Returns:
+        None
     '''
     # Check if the subreddit is None or not a string
-    if subreddit is None or not isinstance(subreddit, str):
+    if subreddit is None or not isinstance(subreddit, str) or \
+       word_list is None or word_list == []:
         return
 
     # Base URL for the Reddit API
-    endpoint = 'https://www.reddit.com'
+    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
+
+    # Parameters for the API request
+    params = {'after': fullname, 'count': count}
 
     # Custom User-Agent to avoid potential issues
     headers = {'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
-    # Parameters for the API request
-    params = {'limit': 100, 'after': after}
-
-    # Initialize counts if it's None
-    if counts is None:
-        counts = {}
-
     # Make a GET request to the subreddit's hot.json endpoint
-    response = requests.get('{}/r/{}/hot.json'.format(endpoint, subreddit),
-                            headers=headers, params=params, allow_redirects=False)
+    info = requests.get(url, headers=headers, params=params, allow_redirects=False)
 
     # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        # Parse the JSON response
-        data = response.json()
-
-        # Extract and count the keywords in the titles
-        posts = data.get('data', {}).get('children', [])
-        for post in posts:
-            title = post.get('data', {}).get('title', '').lower()
-
-            # Split the title into words and count keywords
-            for word in word_list:
-                word = word.lower()
-                if word in title:
-                    counts[word] = counts.get(word, 0) + 1
-
-        # Check if there are more pages (pagination) and recurse
-        after = data.get('data', {}).get('after')
-        if after is not None:
-            count_words(subreddit, word_list, counts, after)
-        else:
-            # Print the results after reaching the end
-            print_results(counts)
-    else:
-        # Print nothing for invalid subreddit or if there's an
-        # issue with the request
+    if info.status_code != 200:
         return None
+
+    # Parse the JSON response
+    info_json = info.json()
+
+    # Extract and count the keywords in the titles
+    results = info_json.get('data', {}).get('children', [])
+    new_packet = [post.get('data', {}).get('title', '') for post in results]
+
+    for title in new_packet:
+        for word in word_list:
+            word = word.lower()
+            formatted_title = title.lower().split(" ")
+            if word in formatted_title:
+                if word in hash_table.keys():
+                    hash_table[word] += formatted_title.count(word)
+                else:
+                    hash_table[word] = formatted_title.count(word)
+
+    # Update variables for the next iteration
+    after = info_json.get('data', {}).get('after', None)
+    dist = info_json.get('data', {}).get('dist')
+    count += dist
+
+    # Check if there are more pages (pagination) and recurse
+    if after:
+        count_words(subreddit, word_list, after, count, hash_table)
+    else:
+        # Print the results after reaching the end
+        print_results(hash_table)
 
 def print_results(counts):
     '''
