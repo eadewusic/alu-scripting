@@ -6,6 +6,7 @@ the titles of all hot articles for a given subreddit.
 
 import requests
 
+
 def recurse(subreddit, hot_list=None, after=None):
     '''
     Recursively queries the Reddit API and returns a list containing
@@ -35,8 +36,12 @@ def recurse(subreddit, hot_list=None, after=None):
     params = {'limit': 100, 'after': after}
 
     # Make a GET request to the subreddit's hot.json endpoint
-    response = requests.get('{}/r/{}/hot.json'.format(endpoint, subreddit),
-                            headers=headers, params=params, allow_redirects=False)
+    response = requests.get(
+    '{}/r/{}/hot.json'.format(endpoint, subreddit),
+    headers=headers,
+    params=params,
+    allow_redirects=False
+    )
 
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
