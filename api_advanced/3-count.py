@@ -5,7 +5,7 @@ sorted count of given keywords
 '''
 import requests
 
-def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
+def count_words(subreddit, word_list, fullname="", count=0, hash_table=None):
     '''Fetches all hot posts in a subreddit and counts occurrences of keywords.
 
     Args:
@@ -23,6 +23,10 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
        word_list is None or word_list == []:
         return
     
+    # Initialize hash_table if it's None
+    if hash_table is None:
+        hash_table = {}
+
     # URL for Reddit API endpoint
     url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
     
@@ -65,7 +69,8 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     
     # If there are more pages, recurse with updated parameters
     if after:
-        count_words(subreddit, word_list, after, count, hash_table)
+        # Pass a new hash_table to avoid sharing counts between recursive calls
+        count_words(subreddit, word_list, after, count, hash_table.copy())
     else:
         # If no more pages, print the results after reaching the end
         {print('{}: {}'.format(key, value)) for key, value in sorted(hash_table.items(), key=lambda i: (-i[1], i[0]))}
