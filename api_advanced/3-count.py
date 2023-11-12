@@ -37,13 +37,8 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     after = info_json.get('data').get('after', None)
     dist = info_json.get('data').get('dist')
     count += dist
-    # If there are more pages, recurse with updated parameters
     if after:
-        # Pass a new instances dictionary to avoid sharing counts between recursive calls
-        count_words(subreddit, word_list, copy.deepcopy(instances), after, count)
+        count_words(subreddit, word_list, after, count, hash_table)
     else:
-        # If no more pages, print the results after reaching the end
-        if len(instances) == 0:
-            return  # Return without printing anything
-        instances = sorted(instances.items(), key=lambda kv: (-kv[1], kv[0].lower()))  # Adjust sorting for case-insensitivity
-        {print('{}: {}'.format(key, value)) for key, value in instances}
+        {print('{}: {}'.format(key, value)) for
+         key, value in sorted(hash_table.items(), key=lambda i: (-i[1], i[0]))}
