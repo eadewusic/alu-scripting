@@ -7,18 +7,9 @@ import requests
 
 
 def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
-    '''Fetches all hot posts in a subreddit and counts
-     occurrences of keywords.
-
-    Parameters:
-        subreddit (str): The name of the subreddit.
-        word_list (list): List of keywords to count.
-        fullname (str): Identifier for the last post fetched.
-        count (int): Count of posts fetched.
-        hash_table (dict): Dictionary to store keyword counts.
-
-    Returns:
-        None: If subreddit is invalid.
+    '''Ffetches all hot posts in a subreddit
+    Return:
+        None - if subreddit is invalid
     '''
     # Check for valid input parameters
     if subreddit is None or not isinstance(subreddit, str) or \
