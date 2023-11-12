@@ -38,7 +38,7 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     dist = info_json.get('data').get('dist')
     count += dist
     if after:
-        count_words(subreddit, word_list, after, count, hash_table)
+        count_words(subreddit, word_list, copy.deepcopy(instances), after, count)
     else:
         {print('{}: {}'.format(key, value)) for
          key, value in sorted(hash_table.items(), key=lambda i: (-i[1], i[0]))}
