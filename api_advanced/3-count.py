@@ -26,7 +26,6 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
     results = info_json.get('data').get('children')
     new_packet = [post.get('data').get('title') for post in results]
     for title in new_packet:
-        print(f"Title: {title}")
         for word in word_list:
             word = word.lower()
             formatted_title = title.lower().split(" ")
