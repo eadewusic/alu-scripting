@@ -30,10 +30,10 @@ def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
             word = word.lower()
             formatted_title = title.lower().split(" ")
             if word in formatted_title:
-                if (word in hash_table.keys()):
-                    hash_table[word] += formatted_title.count(word)
+                if word in hash_table.keys():
+                    hash_table[word] += 1
                 else:
-                    hash_table[word] = formatted_title.count(word)
+                    hash_table[word] = 1
     after = info_json.get('data').get('after', None)
     dist = info_json.get('data').get('dist')
     count += dist
